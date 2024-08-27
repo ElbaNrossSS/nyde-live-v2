@@ -18,7 +18,7 @@ export default function Main() {
         console.log(github);
 
         // Establish WebSocket connection
-        const ws = new WebSocket('wss://your-websocket-url'); // Replace with your WebSocket URL
+        const ws = new WebSocket('wss://api.lanyard.rest/socket'); // Replace with your WebSocket URL
 
         ws.onopen = () => {
             console.log('WebSocket connection established');
