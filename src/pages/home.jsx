@@ -5,7 +5,8 @@ import { FaRegStar } from "react-icons/fa";
 import { BiGitRepoForked } from "react-icons/bi";
 import { MainContext } from "../data/user"; // Context'i import edin
 import Technologies from "../data/technologies";
-
+import userData from "../data/user"; // Varsayılan ihracatı import edin
+const { MainProvider, MainContext } = userData;
 export default function Main() {
     const { user } = useContext(MainContext); // Context'ten user'ı alıyoruz
     const [statusColor, setStatusColor] = useState("gray-500"); // Varsayılan durum rengi
