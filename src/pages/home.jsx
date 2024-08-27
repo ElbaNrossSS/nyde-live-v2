@@ -12,7 +12,7 @@ import about from "../data/variables.js";
 export default function Main() {
     const { user } = useContext(MainContext); // Context'ten user'ı alıyoruz
     const [statusColor, setStatusColor] = useState("bg-gray-500"); // Varsayılan durum rengi
-
+       const { github } = useData(data)
     useEffect(() => {
         if (user) {
             switch (user.discord_user.status) {
