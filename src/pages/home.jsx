@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { BsSpotify, BsArrowRight } from "react-icons/bs";
 import { FaRegStar } from "react-icons/fa";
 import { BiGitRepoForked } from "react-icons/bi";
-
+import User from "../data/variables.js"
 import Technologies from "../data/technologies";
 import userData from "../data/user"; // Varsayılan exportu import edin
 const { MainContext } = userData; // Destructuring ile MainContext'i alın
