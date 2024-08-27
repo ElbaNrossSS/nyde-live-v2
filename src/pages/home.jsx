@@ -14,7 +14,7 @@ export default function Main() {
     const { user, github } = useData(data);
     const { user: discordUser } = UserInformation(); // Get Discord user status from UserInformation
 
-    useEffect(() => {
+    useEffect(async() => {
         console.log(user);
         console.log(github);
     }, [user, github]);
