@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { BsSpotify, BsArrowRight } from "react-icons/bs";
 import { FaRegStar } from "react-icons/fa";
 import { BiGitRepoForked } from "react-icons/bi";
-import userData from "../data/user"; // Varsayılan ihracatı import edin
+
 import Technologies from "../data/technologies";
 
-const { MainContext } = userData; // Varsayılan ihracattan MainContext'i alın
+import userData from "../data/user"; // Varsayılan exportu import edin
+const { MainContext } = userData; // Destructuring ile MainContext'i alın
 
 export default function Main() {
     const { user } = useContext(MainContext); // Context'ten user'ı alıyoruz
