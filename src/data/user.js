@@ -1,6 +1,6 @@
+// src/data/user.js
 import { createContext, useState, useEffect } from "react";
 
-// WebSocket bağlantısı ve kullanıcı verilerini yöneten bir Context
 export const MainContext = createContext();
 
 export function MainProvider({ children }) {
