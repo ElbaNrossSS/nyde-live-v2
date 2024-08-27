@@ -1,34 +1,43 @@
-import { createContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react"
+import User from "./variables"
+import useSWR from "swr"
 
-const MainContext = createContext();
+export default function UserInformation() {
 
-function MainProvider({ children }) {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null)
+    const [github, setGithub] = useState([])
+    let websocket;
+    let variables = {user, setUser, github}
+    let fetchData = (url) => fetch(url).then(r => r.json())
+    let {data, error} = useSWR('https://api.github.com/users/' + User.github + '/repos',fetchData,{refreshInterval:5000})
 
     useEffect(() => {
-        const ws = new WebSocket('wss://api.lanyard.rest/socket');
+        setGithub(data)
+    }, [data])
 
-        ws.onopen = () => {
-            console.log('WebSocket connection established');
-        };
+    useEffect(() => {
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            setUser(data);
-        };
+        websocket = new WebSocket("wss://api.lanyard.rest/socket")
 
-        return () => {
-            ws.close();
-        };
-    }, []);
+        websocket.onmessage = data => {
+            var message = JSON.parse(data.data)
+            if (message.op) { 
+                if (message.op == 1) {
+                    setInterval(() => {
+                        websocket.send(JSON.stringify({ op: 3 }))
+                    }, message.d.heartbeat_interval-1000)
+                    websocket.send(JSON.stringify({ op: 2,  d: {subscribe_to_ids: [User.userId]} }))
+                }
+            }
+            if (message.t && (message.t == "INIT_STATE" || message.t == "PRESENCE_UPDATE")) {
+                setUser((message.t == "PRESENCE_UPDATE") ? message.d : message.d[User.userId])
+            }
+        }
 
-    return (
-        <MainContext.Provider value={{ user }}>
-            {children}
-        </MainContext.Provider>
-    );
+
+
+    }, [])
+
+    return variables
+
 }
-
-// Varsayılan olarak bir nesne döndürüyoruz
-const userData = { MainContext, MainProvider };
-export default userData;
