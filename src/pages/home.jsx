@@ -5,13 +5,12 @@ import { FaRegStar } from "react-icons/fa";
 import { BiGitRepoForked } from "react-icons/bi";
 
 import Technologies from "../data/technologies";
-
 import userData from "../data/user"; // Varsayılan exportu import edin
 const { MainContext } = userData; // Destructuring ile MainContext'i alın
 
 export default function Main() {
     const { user } = useContext(MainContext); // Context'ten user'ı alıyoruz
-    const [statusColor, setStatusColor] = useState("gray-500"); // Varsayılan durum rengi
+    const [statusColor, setStatusColor] = useState("bg-gray-500"); // Varsayılan durum rengi
 
     useEffect(() => {
         if (user) {
@@ -44,7 +43,7 @@ export default function Main() {
                     <h1 className="font-sans font-semibold text-gray-400 text-2xl flex items-center gap-1">
                         <span className="text-4xl"> 👋</span> Hello! Let me introduce myself.
                     </h1>
-                    <h2 className="font-sans text-base text-gray-200 mt-2">{User.description}</h2>
+                    <h2 className="font-sans text-base text-gray-200 mt-2">{user ? user.description : "Loading..."}</h2>
                     <div className="flex items-center gap-3 mt-4">
                         <Link to="/about">
                             <button className="bg-gray-600 rounded-md text-base text-white font-sans px-5 py-3 flex items-center gap-2 transition duration-300 hover:bg-gray-800">
@@ -122,29 +121,29 @@ export default function Main() {
                     {Technologies.data.map(tech => (
                         <div key={tech.name} className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
                             <div className="flex items-center gap-4">
-                                {tech.icon}
+                                <tech.icon className="text-3xl" />
+                                <h1 className="font-sans font-semibold text-gray-200 text-xl">{tech.name}</h1>
                             </div>
-                            <h1 className="font-semibold text-white font-sans text-base">{tech.name}</h1>
+                            <div className="absolute bottom-2 right-2 text-gray-300 text-lg">
+                                <tech.moreIcon />
+                            </div>
                         </div>
                     ))}
                 </div>
             </div>
-            <br /><br />
+            <br />
             <div data-aos="fade-right">
-                <h1 className="font-sans font-semibold text-gray-400 text-2xl">👨‍🏫 Work Experiences</h1>
-                <h2 className="font-sans text-gray-100 text-base mt-2">List of experiences related to technology and computers.</h2>
+                <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-12">📈 Statistics</h1>
+                <h2 className="font-sans text-gray-100 text-base mt-2">Here are some statistics about me.</h2>
                 <div className="mt-5 w-full grid grid-cols-1 gap-4 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
                     <div className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
                         <div className="flex items-center gap-4">
-                            <BiGitRepoForked size="30px" />
+                            <FaRegStar className="text-3xl" />
+                            <h1 className="font-sans font-semibold text-gray-200 text-xl">X Followers</h1>
                         </div>
-                        <h1 className="font-semibold text-white font-sans text-base">GitHub Project</h1>
-                    </div>
-                    <div className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
-                        <div className="flex items-center gap-4">
-                            <FaRegStar size="30px" />
+                        <div className="absolute bottom-2 right-2 text-gray-300 text-lg">
+                            <BiGitRepoForked />
                         </div>
-                        <h1 className="font-semibold text-white font-sans text-base">Interesting Work</h1>
                     </div>
                 </div>
             </div>
