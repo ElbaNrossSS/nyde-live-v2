@@ -39,8 +39,8 @@ export default function Main() {
 
   return (
     <div className="mt-3 max-w-8xl w-11/12 sm:w-10/12 mx-auto">
-      <title>Home | Phaelis</title>
-      
+     <title>Home | Phaelis</title>
+
       <div className="space-y-4 flex flex-col sm:flex-row sm:items-center sm:gap-4 sm:space-y-0">
         <div className="mt-6" data-aos="fade-right">
           <h1 className="font-sans font-semibold text-gray-400 text-2xl flex items-center gap-1">
@@ -50,7 +50,7 @@ export default function Main() {
           <div className="flex items-center gap-3 mt-4">
             <Link to="/about">
               <button className="bg-gray-600 rounded-md text-base text-white font-sans px-5 py-3 flex items-center gap-2 transition duration-300 hover:bg-gray-800">
-                I want to learn about you <BsArrowRight size="22px"/>
+                I want to learn about you <BsArrowRight size="22px" />
               </button>
             </Link>
           </div>
@@ -76,7 +76,7 @@ export default function Main() {
                 )}
                 {user ? (
                   <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
-                    <DiscordStatusIndicator status={discordStatus} /> {discordStatus === 'dnd' ? 'Do Not Disturb' : discordStatus}
+                    <div className={`w-4 h-4 rounded-full ${user.discord_user.status === 'dnd' ? 'bg-red-600' : ''}`}></div> Do not disturb.
                   </h3>
                 ) : (
                   <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
@@ -88,26 +88,27 @@ export default function Main() {
             </div>
             <br />
             <div className="w-full flex justify-between items-center">
-              <h1 className="font-sans text-white font-bold text-sm">{(user && user.listening_to_spotify) ? "LISTENING TO SPOTIFY" : "I AM NOT LISTENING ANYTHING."}</h1>
+              <h1 className="font-sans text-white font-bold text-sm">{user && user.listening_to_spotify ? "LISTENING TO SPOTIFY" : "I AM NOT LISTENING ANYTHING."}</h1>
               <BsSpotify size="25px" className="text-green-600" />
             </div>
             <div className="flex items-center gap-4 mt-3 w-full">
-              {(!user || !user.spotify) && (<div className="w-24 h-24 rounded-lg bg-primary-100 animate-pulse" />)}
-              {user && user.spotify && (
+              {!user || !user.spotify ? (
+                <div className="w-24 h-24 rounded-lg bg-primary-100 animate-pulse" />
+              ) : (
                 <img className="w-24 h-24 rounded-lg" src={user.spotify.album_art_url} />
               )}
               <div>
-                {(!user || !user.listening_to_spotify) ? (
+                {!user || !user.listening_to_spotify ? (
                   <div className="w- h-8 bg-primary-100 rounded-lg animate-pulse" />
                 ) : (
                   <h1 className="font-semibold text-white text-base">{user.spotify.song}</h1>
                 )}
-                {(!user || !user.listening_to_spotify) ? (
+                {!user || !user.listening_to_spotify ? (
                   <div className="w-32 h-4 bg-primary-100 rounded-lg animate-pulse mt-2" />
                 ) : (
                   <h2 className="text-gray-300 text-base">by {user.spotify.artist}</h2>
                 )}
-                {(!user || !user.listening_to_spotify) ? (
+                {!user || !user.listening_to_spotify ? (
                   <div className="w-8/12 h-4 bg-primary-100 rounded-lg animate-pulse mt-2" />
                 ) : (
                   <h2 className="text-gray-300 text-base">on {user.spotify.album}</h2>
@@ -137,30 +138,32 @@ export default function Main() {
         <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-6">📖 Github Repositories</h1>
         <h2 className="font-sans text-gray-100 text-base mt-2">I have {github?.length || 0} repositories now. You can support me by starring!</h2>
         <div className="mt-5 w-full grid grid-cols-1 gap-2 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-          {github ? github.map(data => (
-            <div className="w-full rounded-lg border border-solid border-gray-700 p-4">
-              <div className="flex justify-between items-center">
-                <a target="_blank" href={`https://github.com/${about.github}/${data.name}`}>
-                  <h1 className="text-blue-600 hover:text-blue-800 font-sans font-semibold text-sm">{data.name}</h1>
-                </a>
-                <div className="font-semibold text-gray-300 flex items-center gap-2">
-                  {data.forks} <BiGitRepoForked size="15px" />
+          {github ? (
+            github.map(data => (
+              <div className="w-full rounded-lg border border-solid border-gray-700 p-4">
+                <div className="flex justify-between items-center">
+                  <a target="_blank" href={`https://github.com/${about.github}/${data.name}`}>
+                    <h1 className="text-blue-600 hover:text-blue-800 font-sans font-semibold text-sm">{data.name}</h1>
+                  </a>
+                  <div className="font-semibold text-gray-300 flex items-center gap-2">
+                    {data.forks} <BiGitRepoForked size="15px" />
+                  </div>
+                </div>
+                <p className="text-gray-400 font-sans mt-1 text-sm">{data.description}</p>
+                <div className="flex gap-3 items-center mt-4">
+                  <a target="_blank" href={`https://github.com/${about.github}/${data.name}`}>
+                    <button className="bg-gray-600 rounded-md text-base text-white font-sans px-4 py-2 flex items-center gap-2 transition duration-300 hover:bg-gray-800">
+                      View Repository
+                    </button>
+                  </a>
+                  <a target="_blank" href={data.html_url}>
+                    <button className="bg-gray-600 rounded-md text-base text-white font-sans px-4 py-2 flex items-center gap-2 transition duration-300 hover:bg-gray-800">
+                      View On Github
+                    </button>
+                  </a>
                 </div>
               </div>
-              <p className="text-gray-400 font-sans mt-1 text-sm">{data.description}</p>
-              <div className="flex gap-3 items-center mt-4">
-                <a target="_blank" href={`https://github.com/${about.github}/${data.name}`}>
-                  <button className="bg-gray-600 rounded-md text-base text-white font-sans px-4 py-2 flex items-center gap-2 transition duration-300 hover:bg-gray-800">
-                    View Repository
-                  </button>
-                </a>
-                <a target="_blank" href={data.html_url}>
-                  <button className="bg-gray-600 rounded-md text-base text-white font-sans px-4 py-2 flex items-center gap-2 transition duration-300 hover:bg-gray-800">
-                    View On Github
-                  </button>
-                </a>
-              </div>
-            </div>
+            ))
           ) : (
             <div className="w-full rounded-lg bg-primary-100 animate-pulse h-48" />
           )}
