@@ -10,7 +10,7 @@ import User from "../data/variables.js";
 import Technologies from "../data/technologies";
 import Colors from "../style/githubLangColors";
 import about from "../data/variables.js";
-import useWebSocket from "../data/useWebSocket"; // WebSocket hook'unu import et
+import useWebSocket from "../data/user"; // WebSocket hook'unu import et
 
 const statusColors = {
   'online': 'bg-green-600',
