@@ -1,6 +1,29 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-i
+import { BsSpotify, BsArrowRight } from "react-icons/bs";
+import { FaRegStar } from "react-icons/fa";
+import { BiGitRepoForked } from "react-icons/bi";
+
+/* DATA */
+import { MainContext as data, useContext as useData } from "../context/userData";
+import User from "../data/variables.js";
+import Technologies from "../data/technologies";
+import Colors from "../style/githubLangColors";
+import about from "../data/variables.js";
+
+export default function Main() {
+    const { user, github } = useData(data);
+    const [statusColor, setStatusColor] = useState("gray"); // Default to gray for invisible
+
+    useEffect(() => {
+        // Function to determine the status color
+        const getStatusColor = (status) => {
+            switch (status) {
+                case "dnd": return "red";
+                case "online": return "green";
+                case "idle": return "yellow";
+                case "invisible": return "gray";
+                default: return "gray";
             }
         };
 
