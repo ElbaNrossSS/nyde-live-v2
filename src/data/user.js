@@ -1,4 +1,3 @@
-// src/data/user.js
 import { createContext, useState, useEffect } from "react";
 
 const MainContext = createContext();
@@ -31,4 +30,5 @@ function MainProvider({ children }) {
 }
 
 // Varsayılan olarak bir nesne döndürüyoruz
-export default { MainContext, MainProvider };
+const userData = { MainContext, MainProvider };
+export default userData;
