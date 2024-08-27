@@ -1,56 +1,35 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { BsSpotify, BsArrowRight } from "react-icons/bs";
 import { FaRegStar } from "react-icons/fa";
 import { BiGitRepoForked } from "react-icons/bi";
-import { MainContext as data, useContext as useData } from "../context/userData";
-import User from "../data/variables.js";
+import { MainContext } from "../data/user"; // Context'i import edin
 import Technologies from "../data/technologies";
-import Colors from "../style/githubLangColors";
-import about from "../data/variables.js";
 
 export default function Main() {
-    const { user, github } = useData(data);
-    const [statusColor, setStatusColor] = useState("gray-500"); // Default status color
+    const { user } = useContext(MainContext); // Context'ten user'ı alıyoruz
+    const [statusColor, setStatusColor] = useState("gray-500"); // Varsayılan durum rengi
 
     useEffect(() => {
-        console.log(user);
-        console.log(github);
-
-        // Establish WebSocket connection
-        const ws = new WebSocket('wss://api.lanyard.rest/socket'); // Replace with your WebSocket URL
-
-        ws.onopen = () => {
-            console.log('WebSocket connection established');
-        };
-
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.userId === user.discord_user.id) {
-                // Update the status based on the WebSocket message
-                switch (data.status) {
-                    case 'online':
-                        setStatusColor('bg-green-500');
-                        break;
-                    case 'idle':
-                        setStatusColor('bg-yellow-500');
-                        break;
-                    case 'dnd':
-                        setStatusColor('bg-red-500');
-                        break;
-                    case 'invisible':
-                        setStatusColor('bg-gray-500');
-                        break;
-                    default:
-                        setStatusColor('bg-gray-500');
-                        break;
-                }
+        if (user) {
+            switch (user.discord_user.status) {
+                case 'online':
+                    setStatusColor('bg-green-500');
+                    break;
+                case 'idle':
+                    setStatusColor('bg-yellow-500');
+                    break;
+                case 'dnd':
+                    setStatusColor('bg-red-500');
+                    break;
+                case 'invisible':
+                    setStatusColor('bg-gray-500');
+                    break;
+                default:
+                    setStatusColor('bg-gray-500');
+                    break;
             }
-        };
-
-        return () => {
-            ws.close();
-        };
+        }
     }, [user]);
 
     return (
@@ -149,23 +128,21 @@ export default function Main() {
             </div>
             <br /><br />
             <div data-aos="fade-right">
-                <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-6">📖 Github Repositories</h1>
-                <h2 className="font-sans text-gray-100 text-base mt-2">I have {github?.length || 0} repositories now. You can support me by starring!</h2>
-                <div className="mt-5 w-full grid grid-cols-1 gap-2 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-                    {github?.map(repo => (
-                        <div key={repo.id} className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
-                            <div className="flex items-center gap-4">
-                                <FaRegStar size="24px" className="text-yellow-400" />
-                                <h1 className="font-semibold text-white font-sans text-base">{repo.name}</h1>
-                            </div>
-                            <div className="flex items-center gap-3 absolute right-3">
-                                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-white flex items-center gap-1 hover:underline">
-                                    <span className="font-sans text-sm">View</span>
-                                    <BsArrowRight size="16px" />
-                                </a>
-                            </div>
+                <h1 className="font-sans font-semibold text-gray-400 text-2xl">👨‍🏫 Work Experiences</h1>
+                <h2 className="font-sans text-gray-100 text-base mt-2">List of experiences related to technology and computers.</h2>
+                <div className="mt-5 w-full grid grid-cols-1 gap-4 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+                    <div className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
+                        <div className="flex items-center gap-4">
+                            <BiGitRepoForked size="30px" />
                         </div>
-                    ))}
+                        <h1 className="font-semibold text-white font-sans text-base">GitHub Project</h1>
+                    </div>
+                    <div className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
+                        <div className="flex items-center gap-4">
+                            <FaRegStar size="30px" />
+                        </div>
+                        <h1 className="font-semibold text-white font-sans text-base">Interesting Work</h1>
+                    </div>
                 </div>
             </div>
         </div>
