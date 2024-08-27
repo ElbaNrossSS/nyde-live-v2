@@ -74,16 +74,29 @@ export default function Main() {
                 ) : (
                   <div className="w-20 h-4 bg-primary-100 rounded-lg animate-pulse mt-2" />
                 )}
-                {user ? (
-                  <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
-                    <div className={`w-4 h-4 rounded-full ${user.discord_user.status === 'dnd' ? 'bg-red-600' : ''}`}></div> Do not disturb.
-                  </h3>
-                ) : (
-                  <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
-                    <div className="w-4 h-4 rounded-full bg-primary-100 animate-pulse" />
-                    <div className="w-4/12 bg-primary-100 animate-pulse" />
-                  </h3>
-                )}
+               {user ? (
+  <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
+    <div
+      className={`w-4 h-4 rounded-full ${
+        user.discord_user.status === 'dnd'
+          ? 'bg-red-600'
+          : user.discord_user.status === 'online'
+          ? 'bg-green-600'
+          : user.discord_user.status === 'idle'
+          ? 'bg-yellow-600'
+          : user.discord_user.status === 'invisible'
+          ? 'bg-gray-600'
+          : 'bg-gray-400' // varsayılan durum
+      }`}
+    ></div>{' '}
+    {user.discord_user.status === 'dnd' ? 'Do not disturb.' : ''}
+  </h3>
+) : (
+  <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
+    <div className="w-4 h-4 rounded-full bg-primary-100 animate-pulse" />
+    <div className="w-4/12 bg-primary-100 animate-pulse" />
+  </h3>
+)}
               </div>
             </div>
             <br />
