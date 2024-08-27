@@ -74,7 +74,8 @@ export default function Main() {
                 ) : (
                   <div className="w-20 h-4 bg-primary-100 rounded-lg animate-pulse mt-2" />
                 )}
-               {user ? (
+
+              {user ? (
   <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
     <div
       className={`w-4 h-4 rounded-full ${
@@ -88,7 +89,7 @@ export default function Main() {
           ? 'bg-gray-600'
           : 'bg-gray-400' // varsayılan durum
       }`}
-    ></div>{' '}
+    ></div>
     {user.discord_user.status === 'dnd' ? 'Do not disturb.' : ''}
   </h3>
 ) : (
@@ -97,6 +98,7 @@ export default function Main() {
     <div className="w-4/12 bg-primary-100 animate-pulse" />
   </h3>
 )}
+
               </div>
             </div>
             <br />
