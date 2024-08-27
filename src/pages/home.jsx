@@ -33,14 +33,14 @@ export default function Main() {
         }
     }, [user]);
 
-    useEffect(async () => {
+    useEffect(() => {
         console.log(user);
         console.log(github);
     }, [user]);
 
     return (
         <div className="mt-3 max-w-8xl w-11/12 sm:w-10/12 mx-auto">
-            <title>Home | Barış </title>
+            <title>Home | Phaelis</title>
             
             <div className="space-y-4 flex flex-col sm:flex-row sm:items-center sm:gap-4 sm:space-y-0">
                 <div className="mt-6" data-aos="fade-right">
@@ -60,7 +60,7 @@ export default function Main() {
                     <div className="skew-y-0 sm:skew-y-6 bg-[#111111] w-full sm:w-96 h-72 rounded-lg relative py-5 px-4 overflow-hidden mt-8" align="left">
                         <div className="flex items-center gap-3 w-full">
                             {user ? (
-                                <img className="w-24 h-24 rounded-2xl" src={`https://cdn.discordapp.com/avatars/${user.discord_user.id}/${user.discord_user.avatar}.png?size=4096`} />
+                                <img className="w-24 h-24 rounded-2xl" src={`https://cdn.discordapp.com/avatars/${user.discord_user.id}/${user.discord_user.avatar}.png?size=4096`} alt="Discord Avatar" />
                             ) : (
                                 <div className="w-24 h-24 rounded-2xl bg-primary-100 animate-pulse" />
                             )}
@@ -96,7 +96,7 @@ export default function Main() {
                             {!user || !user.spotify ? (
                                 <div className="w-24 h-24 rounded-lg bg-primary-100 animate-pulse"></div>
                             ) : (
-                                <img className="w-24 h-24 rounded-lg" src={user.spotify.album_art_url} />
+                                <img className="w-24 h-24 rounded-lg" src={user.spotify.album_art_url} alt="Album Art" />
                             )}
                             <div>
                                 {!user || !user.listening_to_spotify ? (
@@ -124,8 +124,8 @@ export default function Main() {
                 <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-12">👨‍💻 Technologies I Use</h1>
                 <h2 className="font-sans text-gray-100 text-base mt-2">List of technologies I can use.</h2>
                 <div className="mt-5 w-full grid grid-cols-1 gap-4 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-                    {Technologies.data.map(tech => (
-                        <div className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
+                    {Technologies.data.map((tech) => (
+                        <div key={tech.name} className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
                             <div className="flex items-center gap-4">
                                 {tech.icon}
                             </div>
@@ -139,11 +139,11 @@ export default function Main() {
                 <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-6">📖 Github Repositories</h1>
                 <h2 className="font-sans text-gray-100 text-base mt-2">I have {github?.length || 0} repositories now. You can support me by starring!</h2>
                 <div className="mt-5 w-full grid grid-cols-1 gap-2 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-                    {github ? (github.map(data => (
-                        <div className="w-full rounded-lg border border-solid border-gray-700 p-4">
+                    {github ? (github.map((data) => (
+                        <div key={data.name} className="w-full rounded-lg border border-solid border-gray-700 p-4">
                             <div className="flex justify-between items-center">
-                                <a target="_blank" href={`https://github.com/${about.github}/${data.name}`}><h1 className="text-blue-600 hover:text-blue-400">{data.name}</h1></a>
-                                <a target="_blank" href={`https://github.com/${about.github}/${data.name}`}><FaRegStar size="20px" className="text-yellow-400" /></a>
+                                <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${about.github}/${data.name}`}><h1 className="text-lg font-semibold text-blue-400">{data.name}</h1></a>
+                                <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${about.github}/${data.name}`}><FaRegStar size="20px" className="text-yellow-400" /></a>
                             </div>
                             <h2 className="text-gray-300">{data.description || "No description"}</h2>
                             <div className="flex items-center justify-between mt-3">
@@ -155,7 +155,7 @@ export default function Main() {
                                         </>
                                     )}
                                 </div>
-                                <a target="_blank" href={`https://github.com/${about.github}/${data.name}`} className="flex items-center gap-2 text-blue-600 hover:text-blue-400">
+                                <a target="_blank" rel="noopener noreferrer" href={`https://github.com/${about.github}/${data.name}`} className="flex items-center gap-2 text-blue-600 hover:text-blue-400">
                                     View Repository <BsArrowRight size="20px" />
                                 </a>
                             </div>
