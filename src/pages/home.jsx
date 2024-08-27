@@ -7,7 +7,8 @@ import User from "../data/variables.js"
 import Technologies from "../data/technologies";
 import userData from "../data/user"; // Varsayılan exportu import edin
 const { MainContext } = userData; // Destructuring ile MainContext'i alın
-
+import Colors from "../style/githubLangColors"
+import about from "../data/variables.js";
 export default function Main() {
     const { user } = useContext(MainContext); // Context'ten user'ı alıyoruz
     const [statusColor, setStatusColor] = useState("bg-gray-500"); // Varsayılan durum rengi
