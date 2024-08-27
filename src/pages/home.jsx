@@ -8,16 +8,50 @@ import User from "../data/variables.js";
 import Technologies from "../data/technologies";
 import Colors from "../style/githubLangColors";
 import about from "../data/variables.js";
-import UserInformation from "../data/UserInformation"; // Import the UserInformation component
 
 export default function Main() {
     const { user, github } = useData(data);
-    const { user: discordUser } = UserInformation(); // Get Discord user status from UserInformation
+    const [statusColor, setStatusColor] = useState("gray-500"); // Default status color
 
-    useEffect(async() => {
+    useEffect(() => {
         console.log(user);
         console.log(github);
-    }, [user, github]);
+
+        // Establish WebSocket connection
+        const ws = new WebSocket('wss://your-websocket-url'); // Replace with your WebSocket URL
+
+        ws.onopen = () => {
+            console.log('WebSocket connection established');
+        };
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.userId === user.discord_user.id) {
+                // Update the status based on the WebSocket message
+                switch (data.status) {
+                    case 'online':
+                        setStatusColor('bg-green-500');
+                        break;
+                    case 'idle':
+                        setStatusColor('bg-yellow-500');
+                        break;
+                    case 'dnd':
+                        setStatusColor('bg-red-500');
+                        break;
+                    case 'invisible':
+                        setStatusColor('bg-gray-500');
+                        break;
+                    default:
+                        setStatusColor('bg-gray-500');
+                        break;
+                }
+            }
+        };
+
+        return () => {
+            ws.close();
+        };
+    }, [user]);
 
     return (
         <div className="mt-3 max-w-8xl w-11/12 sm:w-10/12 mx-auto">
@@ -40,64 +74,58 @@ export default function Main() {
                 <div className="w-full sm:w-9/12 sm:order-2" align="center" data-aos="fade-left">
                     <div className="skew-y-0 sm:skew-y-6 bg-[#111111] w-full sm:w-96 h-72 rounded-lg relative py-5 px-4 overflow-hidden mt-8" align="left">
                         <div className="flex items-center gap-3 w-full">
-                            {(discordUser) ? (
-                                <img className="w-24 h-24 rounded-2xl" src={`https://cdn.discordapp.com/avatars/${discordUser.discord_user.id}/${discordUser.discord_user.avatar}.png?size=4096`} />
+                            {user ? (
+                                <img className="w-24 h-24 rounded-2xl" src={`https://cdn.discordapp.com/avatars/${user.discord_user.id}/${user.discord_user.avatar}.png?size=4096`} />
                             ) : (
                                 <div className="w-24 h-24 rounded-2xl bg-primary-100 animate-pulse" />
                             )}
                             <div>
-                                {(discordUser) ? (
-                                    <h1 className="font-sans text-gray-400 font-semibold text-xl">{discordUser.discord_user.username}</h1>
+                                {user ? (
+                                    <h1 className="font-sans text-gray-400 font-semibold text-xl">{user.discord_user.username}</h1>
                                 ) : (
                                     <div className="bg-primary-100 animate-pulse rounded-lg w-32 h-8" />
                                 )}
-                                {(discordUser) ? (
+                                {user ? (
                                     <h2 className="font-sans text-gray-200 text-base">An experienced web developer.</h2>
                                 ) : (
                                     <div className="w-20 h-4 bg-primary-100 rounded-lg animate-pulse mt-2" />
                                 )}
-                                {(discordUser) ? (
-                                    <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
-                                        <div className={`w-4 h-4 rounded-full ${discordUser.discord_user.status === 'dnd' ? 'bg-red-600' : 'bg-gray-400'}`} />
-                                        {discordUser.discord_user.status === 'dnd' ? 'Do not disturb.' : 'Available'}
-                                    </h3>
-                                ) : (
-                                    <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
-                                        <div className="w-4 h-4 rounded-full bg-primary-100 animate-pulse" />
+                                <h3 className="font-sans text-white text-sm flex items-center gap-2 mt-2">
+                                    <div className={`w-4 h-4 rounded-full ${statusColor}`} />
+                                    {user ? (
+                                        user.discord_user.status === 'dnd' ? 'Do not disturb.' :
+                                        user.discord_user.status === 'online' ? 'Online' :
+                                        user.discord_user.status === 'idle' ? 'Idle' :
+                                        user.discord_user.status === 'invisible' ? 'Invisible' : 'Unknown'
+                                    ) : (
                                         <div className="w-4/12 bg-primary-100 animate-pulse" />
-                                    </h3>
-                                )}
+                                    )}
+                                </h3>
                             </div>
                         </div>
                         <br />
                         <div className="w-full flex justify-between items-center">
-                            <h1 className="font-sans text-white font-bold text-sm">
-                                {(discordUser && discordUser.listening_to_spotify) ? "LISTENING TO SPOTIFY" : "I AM NOT LISTENING ANYTHING."}
-                            </h1>
+                            <h1 className="font-sans text-white font-bold text-sm">{user && user.listening_to_spotify ? "LISTENING TO SPOTIFY" : "I AM NOT LISTENING ANYTHING."}</h1>
                             <BsSpotify size="25px" className="text-green-600" />
                         </div>
                         <div className="flex items-center gap-4 mt-3 w-full">
-                            {(!discordUser || !discordUser.spotify) && (
-                                <div className="w-24 h-24 rounded-lg bg-primary-100 animate-pulse" />
-                            )}
-                            {(discordUser && discordUser.spotify) && (
-                                <img className="w-24 h-24 rounded-lg" src={discordUser.spotify.album_art_url} />
-                            )}
+                            {(!user || !user.spotify) && (<div className="w-24 h-24 rounded-lg bg-primary-100 animate-pulse" />)}
+                            {user && user.spotify && (<img className="w-24 h-24 rounded-lg" src={user.spotify.album_art_url} />)}
                             <div>
-                                {(!discordUser || !discordUser.listening_to_spotify) ? (
+                                {(!user || !user.listening_to_spotify) ? (
                                     <div className="w- h-8 bg-primary-100 rounded-lg animate-pulse" />
                                 ) : (
-                                    <h1 className="font-semibold text-white text-base">{discordUser.spotify.song}</h1>
+                                    <h1 className="font-semibold text-white text-base">{user.spotify.song}</h1>
                                 )}
-                                {(!discordUser || !discordUser.listening_to_spotify) ? (
+                                {(!user || !user.listening_to_spotify) ? (
                                     <div className="w-32 h-4 bg-primary-100 rounded-lg animate-pulse mt-2" />
                                 ) : (
-                                    <h2 className="text-gray-300 text-base">by {discordUser.spotify.artist}</h2>
+                                    <h2 className="text-gray-300 text-base">by {user.spotify.artist}</h2>
                                 )}
-                                {(!discordUser || !discordUser.listening_to_spotify) ? (
+                                {(!user || !user.listening_to_spotify) ? (
                                     <div className="w-8/12 h-4 bg-primary-100 rounded-lg animate-pulse mt-2" />
                                 ) : (
-                                    <h2 className="text-gray-300 text-base">on {discordUser.spotify.album}</h2>
+                                    <h2 className="text-gray-300 text-base">on {user.spotify.album}</h2>
                                 )}
                             </div>
                         </div>
@@ -105,53 +133,41 @@ export default function Main() {
                 </div>
             </div>
             <br /><br />
-        <div data-aos="fade-right">
-            <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-12">👨‍💻 Technologies I Use</h1>
-            <h2 className="font-sans text-gray-100 text-base mt-2">List of technologies I can use.</h2>
-            <div className="mt-5 w-full grid grid-cols-1 gap-4 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-                {(Technologies.data.map(tech => (
-                    <div className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
-                        <div className="flex items-center gap-4">
-                            {tech.icon} 
+            <div data-aos="fade-right">
+                <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-12">👨‍💻 Technologies I Use</h1>
+                <h2 className="font-sans text-gray-100 text-base mt-2">List of technologies I can use.</h2>
+                <div className="mt-5 w-full grid grid-cols-1 gap-4 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+                    {Technologies.data.map(tech => (
+                        <div key={tech.name} className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
+                            <div className="flex items-center gap-4">
+                                {tech.icon}
+                            </div>
+                            <h1 className="font-semibold text-white font-sans text-base">{tech.name}</h1>
                         </div>
-                        <h1 className="font-semibold text-white font-sans text-base">{tech.name}</h1>
-                    </div>
-                )))}
+                    ))}
+                </div>
+            </div>
+            <br /><br />
+            <div data-aos="fade-right">
+                <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-6">📖 Github Repositories</h1>
+                <h2 className="font-sans text-gray-100 text-base mt-2">I have {github?.length || 0} repositories now. You can support me by starring!</h2>
+                <div className="mt-5 w-full grid grid-cols-1 gap-2 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+                    {github?.map(repo => (
+                        <div key={repo.id} className="z-50 w-full rounded-lg bg-primary-100 flex justify-between items-center relative px-4 py-3 transition duration-500 border-2 border-solid border-transparent hover:border-primary">
+                            <div className="flex items-center gap-4">
+                                <FaRegStar size="24px" className="text-yellow-400" />
+                                <h1 className="font-semibold text-white font-sans text-base">{repo.name}</h1>
+                            </div>
+                            <div className="flex items-center gap-3 absolute right-3">
+                                <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="text-white flex items-center gap-1 hover:underline">
+                                    <span className="font-sans text-sm">View</span>
+                                    <BsArrowRight size="16px" />
+                                </a>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
-        <br/><br/>
-        <div data-aos="fade-right">
-            <h1 className="font-sans font-semibold text-2xl text-gray-400 mt-6">📖 Github Repositories</h1>
-            <h2 className="font-sans text-gray-100 text-base mt-2">I have {github?.length || 0} repositories now. You can support me by starring!</h2>
-            <div className="mt-5 w-full grid grid-cols-1 gap-2 grid-flow-row auto-rows-max px-3 sm:px-0 2xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
-                {(github) ? (github.map(data => (
-                    <div className="w-full rounded-lg border border-solid border-gray-700 p-4">
-                        <div className="flex justify-between items-center">
-                            <a target="_blank" href={`https://github.com/${about.github}/${data.name}`}><h1 className="text-blue-600 hover:text-blue-800 font-sans font-semibold text-sm">{data.name}</h1></a>
-                            <div className="font-sans text-gray-500 text-sm px-2 py-1 rounded-2xl border border-solid border-gray-700">Public</div>
-                        </div>
-                        <br/>
-                        <h1 className="font-sans text-gray-400 text-sm">
-                            {data.description}
-                        </h1>
-                        <div className="flex items-center gap-4 mt-8">
-                            <div className="flex items-center gap-2">
-                                <div className={`w-4 h-4 rounded-full`} style={{backgroundColor: Colors[data.language]?.color || "GRAY"}}/>
-                                <h1 className="text-white font-sans font-semibold text-xs">{data.language}</h1>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <FaRegStar size="18px" color="GRAY"/>
-                                <h1 className="font-sans text-gray-400 text-sm">{data.stargazers_count}</h1>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <BiGitRepoForked size="18px" color="GRAY"/>
-                                <h1 className="font-sans text-gray-400 text-sm">{data.forks}</h1>
-                            </div>
-                        </div>
-                    </div>
-                ))) : (<></>)}
-            </div>
-        </div>
-    </div>)
- 
+    );
 }
